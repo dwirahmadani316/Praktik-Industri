@@ -1,0 +1,278 @@
+/* ============================================================
+   STYLE.CSS — Tema Biru & Putih, modern & profesional
+   ============================================================ */
+:root {
+  --primary: #1656c7;
+  --primary-dark: #0d3b8c;
+  --primary-light: #e8f0fe;
+  --accent: #38bdf8;
+  --bg: #f4f7fc;
+  --text-dark: #1b2436;
+  --text-muted: #6b7787;
+  --radius: 14px;
+  --shadow-sm: 0 2px 8px rgba(22, 86, 199, 0.08);
+  --shadow-md: 0 8px 24px rgba(22, 86, 199, 0.12);
+}
+
+* { box-sizing: border-box; }
+
+body {
+  background: var(--bg);
+  color: var(--text-dark);
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  min-height: 100vh;
+}
+
+a { text-decoration: none; }
+
+/* ===================== LOGIN PAGE ===================== */
+.login-wrapper {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 55%, var(--accent) 130%);
+  padding: 24px;
+}
+
+.login-card {
+  width: 100%;
+  max-width: 420px;
+  background: #fff;
+  border-radius: 20px;
+  box-shadow: 0 24px 60px rgba(13, 32, 74, 0.35);
+  overflow: hidden;
+}
+
+.login-card-header {
+  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+  color: #fff;
+  padding: 36px 32px 28px;
+  text-align: center;
+}
+
+.login-card-header .login-icon {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 14px;
+  font-size: 28px;
+}
+
+.login-card-body { padding: 32px; }
+
+.login-card .form-label { font-weight: 600; font-size: 0.88rem; color: var(--text-dark); }
+
+.login-card .form-control {
+  border-radius: 10px;
+  padding: 10px 14px;
+  border: 1.5px solid #e1e7f5;
+}
+
+.login-card .form-control:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 0.2rem rgba(22, 86, 199, 0.15);
+}
+
+.btn-primary-app {
+  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+  border: none;
+  color: #fff;
+  font-weight: 600;
+  padding: 11px;
+  border-radius: 10px;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.btn-primary-app:hover {
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-md);
+  color: #fff;
+}
+
+.btn-primary-app:disabled { opacity: 0.75; }
+
+/* ===================== NAVBAR ===================== */
+.app-navbar {
+  background: linear-gradient(120deg, var(--primary-dark), var(--primary));
+  box-shadow: var(--shadow-sm);
+}
+
+.app-navbar .navbar-brand {
+  color: #fff !important;
+  font-weight: 700;
+  font-size: 1.15rem;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.app-navbar .navbar-brand i { color: var(--accent); }
+
+.app-navbar .nav-user-pill {
+  background: rgba(255, 255, 255, 0.14);
+  color: #fff;
+  border-radius: 999px;
+  padding: 6px 14px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.app-navbar .btn-logout {
+  border: 1.5px solid rgba(255, 255, 255, 0.5);
+  color: #fff;
+  border-radius: 999px;
+  font-size: 0.85rem;
+  padding: 6px 16px;
+  background: transparent;
+}
+
+.app-navbar .btn-logout:hover { background: rgba(255, 255, 255, 0.15); color: #fff; }
+
+/* ===================== LAYOUT ===================== */
+.app-main { padding: 28px 0 60px; }
+
+.page-heading h4 { font-weight: 700; }
+.page-heading .text-muted { font-size: 0.93rem; }
+
+/* ===================== STAT CARDS ===================== */
+.stat-card {
+  border: none;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-sm);
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  height: 100%;
+  background: #fff;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.stat-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); }
+
+.stat-card .stat-icon {
+  width: 52px;
+  height: 52px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  flex-shrink: 0;
+}
+
+.stat-card .stat-value { font-size: 1.65rem; font-weight: 700; line-height: 1; }
+.stat-card .stat-label { font-size: 0.82rem; color: var(--text-muted); font-weight: 500; }
+
+.stat-icon.bg-hadir { background: #e6f7ee; color: #15a35a; }
+.stat-icon.bg-izin { background: #fff3e0; color: #e89a1c; }
+.stat-icon.bg-sakit { background: #e7f3ff; color: #2196d6; }
+.stat-icon.bg-alfa { background: #fde9ea; color: #dc3545; }
+
+/* ===================== CARDS GENERAL ===================== */
+.app-card {
+  background: #fff;
+  border: none;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-sm);
+}
+
+.app-card .card-header {
+  background: transparent;
+  border-bottom: 1px solid #eef1f8;
+  font-weight: 700;
+  padding: 16px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.app-card .card-body { padding: 20px; }
+
+/* ===================== BADGES ===================== */
+.badge-status { font-size: 0.78rem; padding: 5px 11px; border-radius: 999px; font-weight: 600; }
+
+/* ===================== BUTTONS ===================== */
+.btn-app-primary {
+  background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+  border: none;
+  color: #fff;
+  font-weight: 600;
+  border-radius: 10px;
+}
+.btn-app-primary:hover { color: #fff; box-shadow: var(--shadow-sm); }
+
+.btn-outline-app {
+  border: 1.5px solid var(--primary);
+  color: var(--primary);
+  background: #fff;
+  font-weight: 600;
+  border-radius: 10px;
+}
+.btn-outline-app:hover { background: var(--primary-light); color: var(--primary-dark); }
+
+/* ===================== ABSEN HARI INI ===================== */
+.today-box {
+  background: linear-gradient(135deg, var(--primary-light), #fff);
+  border-radius: var(--radius);
+  padding: 22px;
+}
+
+.today-box .today-time {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--primary-dark);
+}
+
+.today-box .today-label { font-size: 0.8rem; color: var(--text-muted); font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; }
+
+/* ===================== TABLES ===================== */
+.table thead th {
+  background: #f0f4fb;
+  color: var(--text-dark);
+  font-size: 0.82rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  border-bottom: none;
+  white-space: nowrap;
+}
+
+.table td { vertical-align: middle; font-size: 0.92rem; }
+
+table.dataTable { border-collapse: separate !important; }
+
+/* ===================== NAV TABS (Admin) ===================== */
+.app-tabs .nav-link {
+  border: none;
+  border-radius: 10px 10px 0 0;
+  font-weight: 600;
+  color: var(--text-muted);
+  padding: 10px 20px;
+}
+.app-tabs .nav-link.active {
+  color: var(--primary-dark);
+  background: #fff;
+  border-bottom: 3px solid var(--primary);
+}
+
+/* ===================== FILTER BAR ===================== */
+.filter-bar select, .filter-bar input { border-radius: 10px; }
+
+/* ===================== RESPONSIVE ===================== */
+@media (max-width: 767.98px) {
+  .stat-card { padding: 16px; }
+  .stat-card .stat-icon { width: 44px; height: 44px; font-size: 18px; }
+  .stat-card .stat-value { font-size: 1.3rem; }
+  .app-main { padding: 20px 0 50px; }
+}

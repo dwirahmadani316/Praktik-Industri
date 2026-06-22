@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard Admin — Sistem Absensi Magang</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet" />
+  <!-- DataTables (Bootstrap 5 styling) -->
+  <link href="https://cdn.datatables.net/1.13.8/css/dataTables.bootstrap5.min.css" rel="stylesheet" />
+
+  <link href="style.css" rel="stylesheet" />
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <nav class="navbar app-navbar navbar-expand">
+    <div class="container d-flex align-items-center justify-content-between py-2">
+      <a class="navbar-brand" href="admin.html"><i class="fa-solid fa-clipboard-user"></i> Absensi Magang <span class="badge bg-light text-primary ms-1">Admin</span></a>
+      <div class="d-flex align-items-center gap-2">
+        <span class="nav-user-pill"><i class="fa-solid fa-user-shield"></i> <span id="navAdminName">...</span></span>
+        <button id="btnLogout" class="btn btn-logout d-none d-md-inline-flex align-items-center gap-2">
+          <i class="fa-solid fa-right-from-bracket"></i> Keluar
+        </button>
+        <button id="btnLogoutMobile" class="btn btn-logout d-md-none" title="Keluar">
+          <i class="fa-solid fa-right-from-bracket"></i>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <main class="app-main">
+    <div class="container">
+
+      <div class="page-heading mb-4">
+        <h4 class="mb-1">Dashboard Admin</h4>
+        <p class="text-muted mb-0">Kelola data absensi seluruh peserta magang</p>
+      </div>
+
+      <!-- STAT CARDS -->
+      <div class="row g-3 mb-4">
+        <div class="col-6 col-md-3">
+          <div class="stat-card">
+            <div class="stat-icon bg-hadir"><i class="fa-solid fa-circle-check"></i></div>
+            <div><div class="stat-value" id="statHadirAdmin">0</div><div class="stat-label">Hadir</div></div>
+          </div>
+        </div>
+        <div class="col-6 col-md-3">
+          <div class="stat-card">
+            <div class="stat-icon bg-izin"><i class="fa-solid fa-file-pen"></i></div>
+            <div><div class="stat-value" id="statIzinAdmin">0</div><div class="stat-label">Izin</div></div>
+          </div>
+        </div>
+        <div class="col-6 col-md-3">
+          <div class="stat-card">
+            <div class="stat-icon bg-sakit"><i class="fa-solid fa-suitcase-medical"></i></div>
+            <div><div class="stat-value" id="statSakitAdmin">0</div><div class="stat-label">Sakit</div></div>
+          </div>
+        </div>
+        <div class="col-6 col-md-3">
+          <div class="stat-card">
+            <div class="stat-icon bg-alfa"><i class="fa-solid fa-circle-xmark"></i></div>
+            <div><div class="stat-value" id="statAlfaAdmin">0</div><div class="stat-label">Alfa</div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TABS -->
+      <ul class="nav nav-tabs app-tabs mb-0" id="adminTabs" role="tablist">
+        <li class="nav-item" role="presentation">
+          <button class="nav-link active" id="tab-attendance-btn" data-bs-toggle="tab" data-bs-target="#paneAttendance" type="button">
+            <i class="fa-solid fa-table-list me-2"></i>Data Absensi
+          </button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button class="nav-link" id="tab-users-btn" data-bs-toggle="tab" data-bs-target="#paneUsers" type="button">
+            <i class="fa-solid fa-users-gear me-2"></i>Kelola Pengguna
+          </button>
+        </li>
+      </ul>
+
+      <div class="tab-content">
+
+        <!-- ===================== TAB: DATA ABSENSI ===================== -->
+        <div class="tab-pane fade show active" id="paneAttendance" role="tabpanel">
+          <div class="app-card" style="border-radius: 0 14px 14px 14px;">
+            <div class="card-header">
+              <span><i class="fa-solid fa-filter me-2 text-primary"></i>Filter &amp; Aksi</span>
+              <div class="d-flex flex-wrap gap-2">
+                <button id="btnTandaiAlfa" class="btn btn-outline-app btn-sm" data-bs-toggle="modal" data-bs-target="#modalAlfa">
+                  <i class="fa-solid fa-user-xmark me-2"></i>Tandai Alfa
+                </button>
+                <button id="btnExportExcel" class="btn btn-app-primary btn-sm" data-bs-toggle="modal" data-bs-target="#modalExport">
+                  <i class="fa-solid fa-file-excel me-2"></i>Export Excel
+                </button>
+              </div>
+            </div>
+            <div class="card-body">
+              <div class="row g-2 filter-bar mb-3">
+                <div class="col-6 col-md-3">
+                  <select class="form-select form-select-sm" id="filterBulan">
+                    <option value="">Semua Bulan</option>
+                    <option value="01">Januari</option>
+                    <option value="02">Februari</option>
+                    <option value="03">Maret</option>
+                    <option value="04">April</option>
+                    <option value="05">Mei</option>
+                    <option value="06">Juni</option>
+                    <option value="07">Juli</option>
+                    <option value="08">Agustus</option>
+                    <option value="09">September</option>
+                    <option value="10">Oktober</option>
+                    <option value="11">November</option>
+                    <option value="12">Desember</option>
+                  </select>
+                </div>
+                <div class="col-6 col-md-3">
+                  <select class="form-select form-select-sm" id="filterTahun">
+                    <option value="">Semua Tahun</option>
+                  </select>
+                </div>
+                <div class="col-6 col-md-3">
+                  <select class="form-select form-select-sm" id="filterStatus">
+                    <option value="">Semua Status</option>
+                    <option value="Hadir">Hadir</option>
+                    <option value="Izin">Izin</option>
+                    <option value="Sakit">Sakit</option>
+                    <option value="Alfa">Alfa</option>
+                  </select>
+                </div>
+                <div class="col-6 col-md-3">
+                  <button id="btnResetFilter" class="btn btn-outline-secondary btn-sm w-100">
+                    <i class="fa-solid fa-rotate-left me-1"></i>Reset Filter
+                  </button>
+                </div>
+              </div>
+
+              <div class="table-responsive">
+                <table id="attendanceTable" class="table table-hover align-middle w-100">
+                  <thead>
+                    <tr>
+                      <th>Nama</th>
+                      <th>Tanggal</th>
+                      <th>Jam Masuk</th>
+                      <th>Jam Pulang</th>
+                      <th>Status</th>
+                      <th>Aksi</th>
+                    </tr>
+                  </thead>
+                  <tbody></tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ===================== TAB: KELOLA PENGGUNA ===================== -->
+        <div class="tab-pane fade" id="paneUsers" role="tabpanel">
+          <div class="app-card" style="border-radius: 0 14px 14px 14px;">
+            <div class="card-header">
+              <span><i class="fa-solid fa-users-gear me-2 text-primary"></i>Profil Pengguna</span>
+              <button id="btnTambahUser" class="btn btn-app-primary btn-sm">
+                <i class="fa-solid fa-user-plus me-2"></i>Tambah Pengguna
+              </button>
+            </div>
+            <div class="card-body">
+              <div class="alert alert-primary-app border-0" style="background: var(--primary-light); color: var(--primary-dark);">
+                <i class="fa-solid fa-circle-info me-2"></i>
+                Akun login dibuat manual di <b>Firebase Authentication Console</b>. Setelah itu, salin <b>UID</b> akun
+                tersebut dan daftarkan profilnya di sini (Nama, Email, Role) agar bisa digunakan untuk absensi.
+              </div>
+              <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                  <thead>
+                    <tr>
+                      <th>Nama</th>
+                      <th>Email</th>
+                      <th>Role</th>
+                      <th>Aksi</th>
+                    </tr>
+                  </thead>
+                  <tbody id="usersTableBody">
+                    <tr><td colspan="4" class="text-center text-muted py-4">Memuat data...</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </main>
+
+  <!-- MODAL EDIT ABSENSI -->
+  <div class="modal fade" id="modalEdit" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <form id="formEdit">
+          <div class="modal-header">
+            <h5 class="modal-title"><i class="fa-solid fa-pen me-2 text-primary"></i>Edit Data Absensi</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+          </div>
+          <div class="modal-body">
+            <input type="hidden" id="editDocId" />
+            <div class="row g-3">
+              <div class="col-md-6">
+                <label class="form-label">Nama</label>
+                <input type="text" class="form-control" id="editNama" disabled />
+              </div>
+              <div class="col-md-6">
+                <label class="form-label">Tanggal</label>
+                <input type="text" class="form-control" id="editTanggalDisplay" disabled />
+              </div>
+              <div class="col-md-6">
+                <label class="form-label">Jam Masuk</label>
+                <input type="time" class="form-control" id="editJamMasuk" />
+              </div>
+              <div class="col-md-6">
+                <label class="form-label">Jam Pulang</label>
+                <input type="time" class="form-control" id="editJamPulang" />
+              </div>
+              <div class="col-md-6">
+                <label class="form-label">Status</label>
+                <select class="form-select" id="editStatus">
+                  <option value="Hadir">Hadir</option>
+                  <option value="Izin">Izin</option>
+                  <option value="Sakit">Sakit</option>
+                  <option value="Alfa">Alfa</option>
+                </select>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label">Keterangan</label>
+                <input type="text" class="form-control" id="editKeterangan" />
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Batal</button>
+            <button type="submit" id="btnSubmitEdit" class="btn btn-app-primary">
+              <i class="fa-solid fa-floppy-disk me-2"></i>Simpan Perubahan
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL TANDAI ALFA -->
+  <div class="modal fade" id="modalAlfa" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <form id="formAlfa">
+          <div class="modal-header">
+            <h5 class="modal-title"><i class="fa-solid fa-user-xmark me-2 text-danger"></i>Tandai Alfa</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+          </div>
+          <div class="modal-body">
+            <p class="text-muted small">Gunakan ini jika pengguna tidak memiliki data absensi pada tanggal tertentu.</p>
+            <div class="mb-3">
+              <label class="form-label">Pengguna</label>
+              <select class="form-select" id="alfaUser" required>
+                <option value="" disabled selected>-- Pilih Pengguna --</option>
+              </select>
+            </div>
+            <div class="mb-1">
+              <label class="form-label">Tanggal</label>
+              <input type="date" class="form-control" id="alfaTanggal" required />
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Batal</button>
+            <button type="submit" id="btnSubmitAlfa" class="btn btn-danger">
+              <i class="fa-solid fa-user-xmark me-2"></i>Tandai Alfa
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL EXPORT EXCEL -->
+  <div class="modal fade" id="modalExport" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title"><i class="fa-solid fa-file-excel me-2 text-success"></i>Export Data ke Excel</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <div class="mb-3">
+            <label class="form-label">Filter Data</label>
+            <select class="form-select" id="exportFilterType">
+              <option value="semua">Semua Data</option>
+              <option value="bulan">Per Bulan</option>
+              <option value="tahun">Per Tahun</option>
+              <option value="status">Per Status</option>
+            </select>
+          </div>
+          <div class="mb-3 d-none" id="exportBulanGroup">
+            <label class="form-label">Pilih Bulan</label>
+            <select class="form-select" id="exportBulan">
+              <option value="" disabled selected>Pilih Bulan</option>
+              <option value="01">Januari</option>
+              <option value="02">Februari</option>
+              <option value="03">Maret</option>
+              <option value="04">April</option>
+              <option value="05">Mei</option>
+              <option value="06">Juni</option>
+              <option value="07">Juli</option>
+              <option value="08">Agustus</option>
+              <option value="09">September</option>
+              <option value="10">Oktober</option>
+              <option value="11">November</option>
+              <option value="12">Desember</option>
+            </select>
+          </div>
+          <div class="mb-3 d-none" id="exportTahunGroup">
+            <label class="form-label">Pilih Tahun</label>
+            <select class="form-select" id="exportTahun">
+              <option value="" disabled selected>Pilih Tahun</option>
+            </select>
+          </div>
+          <div class="mb-1 d-none" id="exportStatusGroup">
+            <label class="form-label">Pilih Status</label>
+            <select class="form-select" id="exportStatus">
+              <option value="" disabled selected>Pilih Status</option>
+              <option value="Hadir">Hadir</option>
+              <option value="Izin">Izin</option>
+              <option value="Sakit">Sakit</option>
+              <option value="Alfa">Alfa</option>
+            </select>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Batal</button>
+          <button type="button" id="btnDoExport" class="btn btn-success">
+            <i class="fa-solid fa-download me-2"></i>Export Sekarang
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL TAMBAH / EDIT PENGGUNA -->
+  <div class="modal fade" id="modalUser" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <form id="formUser">
+          <div class="modal-header">
+            <h5 class="modal-title" id="userModalTitle"><i class="fa-solid fa-user-plus me-2 text-primary"></i>Tambah Pengguna</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+          </div>
+          <div class="modal-body">
+            <div class="mb-3">
+              <label class="form-label">UID (dari Firebase Authentication)</label>
+              <input type="text" class="form-control" id="userUid" placeholder="Contoh: hY3kP9..." required />
+              <div class="form-text">Salin UID dari Firebase Console &gt; Authentication setelah membuat akun.</div>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Nama</label>
+              <input type="text" class="form-control" id="userNama" required />
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Email</label>
+              <input type="email" class="form-control" id="userEmail" required />
+            </div>
+            <div class="mb-1">
+              <label class="form-label">Role</label>
+              <select class="form-select" id="userRole">
+                <option value="user">Pengguna (Anak Magang)</option>
+                <option value="admin">Admin</option>
+              </select>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Batal</button>
+            <button type="submit" id="btnSubmitUser" class="btn btn-app-primary">
+              <i class="fa-solid fa-floppy-disk me-2"></i>Simpan
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <!-- SweetAlert2 -->
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <!-- jQuery (dibutuhkan oleh DataTables) -->
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  <!-- DataTables -->
+  <script src="https://cdn.datatables.net/1.13.8/js/jquery.dataTables.min.js"></script>
+  <script src="https://cdn.datatables.net/1.13.8/js/dataTables.bootstrap5.min.js"></script>
+  <!-- SheetJS (xlsx) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+
+  <!-- Firebase (Compat SDK) -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+
+  <!-- App Scripts -->
+    <script src="firebase-config.js"></script>
+    <script src="auth.js"></script>
+    <script src="admin.js"></script>
+</body>
+</html>
