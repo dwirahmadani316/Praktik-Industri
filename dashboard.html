@@ -11,11 +11,11 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" rel="stylesheet" />
   <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet" />
+  
   <link href="style.css" rel="stylesheet" />
 </head>
 <body>
 
-  <!-- NAVBAR -->
   <nav class="navbar app-navbar navbar-expand">
     <div class="container d-flex align-items-center justify-content-between py-2">
       <a class="navbar-brand" href="dashboard.html"><i class="fa-solid fa-clipboard-user"></i> Absensi Magang</a>
@@ -34,102 +34,164 @@
   <main class="app-main">
     <div class="container">
 
-      <!-- HEADING -->
-      <div class="page-heading mb-4">
-        <h4 class="mb-1">Halo, <span id="welcomeName">Pengguna</span> 👋</h4>
-        <p class="text-muted mb-0">Hari ini, <span id="todayDateLabel">-</span></p>
-      </div>
-
-      <!-- STAT CARDS -->
-      <div class="row g-3 mb-4">
-        <div class="col-6 col-md-3">
-          <div class="stat-card">
-            <div class="stat-icon bg-hadir"><i class="fa-solid fa-circle-check"></i></div>
-            <div><div class="stat-value" id="statHadir">0</div><div class="stat-label">Hadir</div></div>
-          </div>
+      <div class="page-heading mb-4 d-flex flex-wrap justify-content-between align-items-center gap-3">
+        <div>
+          <h4 class="mb-1">Halo, <span id="welcomeName">Pengguna</span> 👋</h4>
+          <p class="text-muted mb-0">Hari ini: <span id="todayDateLabel">-</span></p>
         </div>
-        <div class="col-6 col-md-3">
-          <div class="stat-card">
-            <div class="stat-icon bg-izin"><i class="fa-solid fa-file-pen"></i></div>
-            <div><div class="stat-value" id="statIzin">0</div><div class="stat-label">Izin</div></div>
-          </div>
-        </div>
-        <div class="col-6 col-md-3">
-          <div class="stat-card">
-            <div class="stat-icon bg-sakit"><i class="fa-solid fa-suitcase-medical"></i></div>
-            <div><div class="stat-value" id="statSakit">0</div><div class="stat-label">Sakit</div></div>
-          </div>
-        </div>
-        <div class="col-6 col-md-3">
-          <div class="stat-card">
-            <div class="stat-icon bg-alfa"><i class="fa-solid fa-circle-xmark"></i></div>
-            <div><div class="stat-value" id="statAlfa">0</div><div class="stat-label">Alfa</div></div>
-          </div>
+        <div class="text-md-end text-start p-3 bg-white rounded-3 shadow-sm border">
+          <h3 class="mb-0 text-primary fw-bold" id="liveClock" style="font-family: monospace;">00:00:00</h3>
+          <small class="text-muted fw-bold text-uppercase" style="font-size: 0.7rem; letter-spacing: 1px;">Waktu Saat Ini</small>
         </div>
       </div>
 
-      <!-- ABSEN HARI INI -->
-      <div class="app-card mb-4">
-        <div class="card-header">
-          <span><i class="fa-regular fa-clock me-2 text-primary"></i>Absensi Hari Ini</span>
-          <span id="todayStatusBadge"><span class="badge bg-secondary">Memuat...</span></span>
-        </div>
-        <div class="card-body">
-          <div class="today-box">
-            <div class="row g-3 align-items-center">
-              <div class="col-6 col-md-3">
-                <div class="today-label">Jam Masuk</div>
-                <div class="today-time" id="todayJamMasuk">-</div>
-              </div>
-              <div class="col-6 col-md-3">
-                <div class="today-label">Jam Pulang</div>
-                <div class="today-time" id="todayJamPulang">-</div>
-              </div>
-              <div class="col-12 col-md-6 d-flex flex-wrap gap-2 justify-content-md-end">
-                <button id="btnAbsenMasuk" class="btn btn-app-primary px-4">
-                  <i class="fa-solid fa-arrow-right-to-bracket me-2"></i>Absen Masuk
-                </button>
-                <button id="btnAbsenPulang" class="btn btn-outline-app px-4" disabled>
-                  <i class="fa-solid fa-arrow-right-from-bracket me-2"></i>Absen Pulang
-                </button>
-                <button class="btn btn-outline-secondary px-3" data-bs-toggle="modal" data-bs-target="#modalIzinSakit">
-                  <i class="fa-regular fa-note-sticky me-2"></i>Ajukan Izin/Sakit
-                </button>
+      <ul class="nav nav-tabs app-tabs mb-0" id="userTabs" role="tablist">
+        <li class="nav-item" role="presentation">
+          <button class="nav-link active" id="tab-absen-btn" data-bs-toggle="tab" data-bs-target="#paneAbsen" type="button">
+            <i class="fa-solid fa-house-user me-2"></i>Beranda Absensi
+          </button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button class="nav-link" id="tab-riwayat-btn" data-bs-toggle="tab" data-bs-target="#paneRiwayat" type="button">
+            <i class="fa-solid fa-calendar-check me-2"></i>Riwayat &amp; Rekap
+          </button>
+        </li>
+      </ul>
+
+      <div class="tab-content">
+        
+        <div class="tab-pane fade show active" id="paneAbsen" role="tabpanel">
+          <div class="app-card" style="border-radius: 0 14px 14px 14px;">
+            <div class="card-header">
+              <span><i class="fa-regular fa-clock me-2 text-primary"></i>Absensi Hari Ini</span>
+              <span id="todayStatusBadge"><span class="badge bg-secondary">Memuat...</span></span>
+            </div>
+            <div class="card-body">
+              <div class="today-box">
+                
+                <div class="mb-4">
+                  <label class="form-label text-muted small fw-bold"><i class="fa-solid fa-camera me-1"></i> Ambil Foto Selfie Verifikasi</label>
+                  <input type="file" id="inputFotoAbsen" accept="image/*" capture="user" class="form-control" style="border-radius: 8px; border-color: #d1d9e6;" required />
+                  <small class="text-muted" style="font-size: 0.75rem;">Wajib mengambil foto langsung melalui kamera untuk bisa melakukan absensi masuk.</small>
+                </div>
+
+                <div class="row g-3 align-items-center mb-4">
+                  <div class="col-6 col-md-3">
+                    <div class="today-label">Jam Masuk</div>
+                    <div class="today-time" id="todayJamMasuk">-</div>
+                  </div>
+                  <div class="col-6 col-md-3">
+                    <div class="today-label">Jam Pulang</div>
+                    <div class="today-time" id="todayJamPulang">-</div>
+                  </div>
+                  <div class="col-12 col-md-6 d-flex flex-wrap gap-2 justify-content-md-end">
+                    <button id="btnAbsenMasuk" class="btn btn-app-primary px-4">
+                      <i class="fa-solid fa-arrow-right-to-bracket me-2"></i>Absen Masuk
+                    </button>
+                    <button id="btnAbsenPulang" class="btn btn-outline-app px-4" disabled>
+                      <i class="fa-solid fa-arrow-right-from-bracket me-2"></i>Absen Pulang
+                    </button>
+                    <button class="btn btn-outline-secondary px-3" data-bs-toggle="modal" data-bs-target="#modalIzinSakit">
+                      <i class="fa-regular fa-note-sticky me-2"></i>Ajukan Izin/Sakit
+                    </button>
+                  </div>
+                </div>
+
+                <hr class="border-secondary opacity-25" />
+                
+                <div class="mt-3">
+                  <label class="form-label text-muted small fw-bold"><i class="fa-solid fa-pen-to-square me-1"></i> Keterangan (Opsional sebelum absen)</label>
+                  <input type="text" id="inputKeteranganAbsen" class="form-control" placeholder="Contoh: Shift Pagi / Terlambat karena macet / WFH..." style="border-radius: 8px; border-color: #d1d9e6;" />
+                  <small class="text-muted" style="font-size: 0.75rem;">Tambahkan catatan jika diperlukan sebelum mengklik tombol Absen Masuk atau Pulang.</small>
+                </div>
+
               </div>
             </div>
           </div>
         </div>
-      </div>
 
-      <!-- RIWAYAT ABSENSI -->
-      <div class="app-card">
-        <div class="card-header">
-          <span><i class="fa-solid fa-table-list me-2 text-primary"></i>Riwayat Absensi Saya</span>
-        </div>
-        <div class="card-body">
-          <div class="table-responsive">
-            <table class="table table-hover align-middle mb-0">
-              <thead>
-                <tr>
-                  <th>Tanggal</th>
-                  <th>Jam Masuk</th>
-                  <th>Jam Pulang</th>
-                  <th>Status</th>
-                  <th>Keterangan</th>
-                </tr>
-              </thead>
-              <tbody id="historyTableBody">
-                <tr><td colspan="5" class="text-center text-muted py-4">Memuat data...</td></tr>
-              </tbody>
-            </table>
+        <div class="tab-pane fade" id="paneRiwayat" role="tabpanel">
+          
+          <div class="row g-2 mb-3 mt-3">
+            <div class="col-6 col-md-3">
+              <select id="filterBulanUser" class="form-select form-select-sm" style="border-radius: 8px; border-color: #d1d9e6;">
+                <option value="01">Januari</option>
+                <option value="02">Februari</option>
+                <option value="03">Maret</option>
+                <option value="04">April</option>
+                <option value="05">Mei</option>
+                <option value="06">Juni</option>
+                <option value="07">Juli</option>
+                <option value="08">Agustus</option>
+                <option value="09">September</option>
+                <option value="10">Oktober</option>
+                <option value="11">November</option>
+                <option value="12">Desember</option>
+              </select>
+            </div>
+            <div class="col-6 col-md-3">
+              <select id="filterTahunUser" class="form-select form-select-sm" style="border-radius: 8px; border-color: #d1d9e6;">
+                </select>
+            </div>
           </div>
-        </div>
-      </div>
 
+          <div class="row g-3 mb-4">
+            <div class="col-6 col-md-3">
+              <div class="stat-card">
+                <div class="stat-icon bg-hadir"><i class="fa-solid fa-circle-check"></i></div>
+                <div><div class="stat-value" id="statHadir">0</div><div class="stat-label">Hadir</div></div>
+              </div>
+            </div>
+            <div class="col-6 col-md-3">
+              <div class="stat-card">
+                <div class="stat-icon bg-izin"><i class="fa-solid fa-file-pen"></i></div>
+                <div><div class="stat-value" id="statIzin">0</div><div class="stat-label">Izin</div></div>
+              </div>
+            </div>
+            <div class="col-6 col-md-3">
+              <div class="stat-card">
+                <div class="stat-icon bg-sakit"><i class="fa-solid fa-suitcase-medical"></i></div>
+                <div><div class="stat-value" id="statSakit">0</div><div class="stat-label">Sakit</div></div>
+              </div>
+            </div>
+            <div class="col-6 col-md-3">
+              <div class="stat-card">
+                <div class="stat-icon bg-alfa"><i class="fa-solid fa-circle-xmark"></i></div>
+                <div><div class="stat-value" id="statAlfa">0</div><div class="stat-label">Alfa</div></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="app-card">
+            <div class="card-header">
+              <span><i class="fa-solid fa-table-list me-2 text-primary"></i>Riwayat Absensi Anda</span>
+            </div>
+            <div class="card-body">
+              <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                  <thead>
+                    <tr>
+                      <th>Tanggal</th>
+                      <th>Jam Masuk</th>
+                      <th>Jam Pulang</th>
+                      <th>Status</th>
+                      <th>Keterangan</th>
+                    </tr>
+                  </thead>
+                  <tbody id="historyTableBody">
+                    <tr><td colspan="5" class="text-center text-muted py-4">Memuat data...</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
     </div>
   </main>
 
-  <!-- MODAL IZIN / SAKIT -->
   <div class="modal fade" id="modalIzinSakit" tabindex="-1">
     <div class="modal-dialog">
       <div class="modal-content">
@@ -173,8 +235,8 @@
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
 
-    <script src="firebase-config.js"></script>
-    <script src="auth.js"></script>
-    <script src="dashboard.js"></script>
+  <script src="firebase-config.js"></script>
+  <script src="auth.js"></script>
+  <script src="dashboard.js"></script>
 </body>
 </html>
