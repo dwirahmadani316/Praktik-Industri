@@ -37,18 +37,34 @@ function initDataTable() {
       { data: "jamMasuk", title: "Jam Masuk", render: (d) => d || "-" },
       { data: "jamPulang", title: "Jam Pulang", render: (d) => d || "-" },
       { data: "status", title: "Status", render: (d) => AppUtils.badgeStatus(d) },
+      { 
+        data: "keterangan", 
+        title: "Keterangan", 
+        render: (d) => d ? `<span class="text-muted small">${d}</span>` : '<span class="text-muted small">-</span>' 
+      },
       {
         data: null,
         title: "Aksi",
         orderable: false,
         searchable: false,
-        render: (data, type, row) => `
-          <button class="btn btn-sm btn-outline-primary btn-edit-row me-1" data-id="${row.id}" title="Edit">
-            <i class="fa-solid fa-pen"></i>
-          </button>
-          <button class="btn btn-sm btn-outline-danger btn-delete-row" data-id="${row.id}" title="Hapus">
-            <i class="fa-solid fa-trash"></i>
-          </button>`
+        // --- PERBAIKAN PADA BAGIAN RENDER TOMBOL AKSI ---
+        render: (data, type, row) => {
+          // Cek apakah ada foto masuk yang dikirim (dari ImgBB)
+          const btnFoto = row.fotoMasukUrl 
+            ? `<button class="btn btn-sm btn-outline-success btn-view-photo me-1" data-url="${row.fotoMasukUrl}" data-nama="${row.nama}" title="Lihat Foto Selfie">
+                <i class="fa-solid fa-image"></i>
+               </button>` 
+            : ''; // Kosong jika tidak ada foto (misal status Izin/Sakit/Alfa)
+
+          return `
+            ${btnFoto}
+            <button class="btn btn-sm btn-outline-primary btn-edit-row me-1" data-id="${row.id}" title="Edit">
+              <i class="fa-solid fa-pen"></i>
+            </button>
+            <button class="btn btn-sm btn-outline-danger btn-delete-row" data-id="${row.id}" title="Hapus">
+              <i class="fa-solid fa-trash"></i>
+            </button>`;
+        }
       }
     ],
     order: [[1, "desc"]],
@@ -63,6 +79,25 @@ function initDataTable() {
       emptyTable: "Belum ada data absensi",
       paginate: { previous: "Sebelumnya", next: "Berikutnya" }
     }
+  });
+
+  // --- EVENT LISTENER UNTUK TOMBOL LIHAT FOTO ---
+  $("#attendanceTable tbody").on("click", ".btn-view-photo", function () {
+    const urlFoto = $(this).data("url");
+    const namaUser = $(this).data("nama");
+
+    Swal.fire({
+      title: `Foto Selfie ${namaUser}`,
+      text: "Bukti verifikasi kehadiran di lokasi",
+      imageUrl: urlFoto,
+      imageWidth: 400,
+      imageAlt: `Foto Absen ${namaUser}`,
+      confirmButtonColor: "#1656c7",
+      confirmButtonText: "Tutup",
+      showClass: {
+        popup: 'animate__animated animate__fadeInUp'
+      }
+    });
   });
 
   $("#attendanceTable tbody").on("click", ".btn-edit-row", function () {
@@ -344,18 +379,23 @@ function doExport() {
     return;
   }
 
+  // --- BAGIAN MENGISI DATA EXCEL (KETERANGAN DITAMBAHKAN DI SINI) ---
   const rows = data
     .sort((a, b) => a.tanggal.localeCompare(b.tanggal))
     .map((d) => ({
-      Nama: d.nama,
-      Tanggal: AppUtils.displayDate(d.tanggal),
+      "Nama": d.nama,
+      "Tanggal": AppUtils.displayDate(d.tanggal),
       "Jam Masuk": d.jamMasuk || "-",
       "Jam Pulang": d.jamPulang || "-",
-      Status: d.status
+      "Status": d.status,
+      "Keterangan": d.keterangan || "-" // Menarik data keterangan dari Firestore
     }));
 
   const ws = XLSX.utils.json_to_sheet(rows);
-  ws["!cols"] = [{ wch: 22 }, { wch: 16 }, { wch: 12 }, { wch: 12 }, { wch: 10 }];
+  
+  // Mengatur lebar kolom Excel (Nama, Tanggal, Masuk, Pulang, Status, Keterangan)
+  ws["!cols"] = [{ wch: 22 }, { wch: 16 }, { wch: 12 }, { wch: 12 }, { wch: 10 }, { wch: 35 }]; 
+  
   const wb = XLSX.utils.book_new();
   XLSX.utils.book_append_sheet(wb, ws, "Absensi");
   XLSX.writeFile(wb, `${namaFile}.xlsx`);
